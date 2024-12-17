@@ -24,6 +24,7 @@ stripe = "^11.3.0"
 celery = "^5.4.0"
 eventlet = "^0.38.2"
 django-celery-beat = "^2.7.0"
+pillow = "^11.0.0"
 
 
 [build-system]
