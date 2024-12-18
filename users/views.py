@@ -1,11 +1,9 @@
-from rest_framework import status, viewsets
+from rest_framework import viewsets
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import AllowAny
 
 from users.models import CustomsUser
-from users.serializers import (
-    UserSerializer,
-)
+from users.serializers import UserSerializer
 
 
 class UserCreateAPIView(CreateAPIView):
@@ -28,4 +26,3 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         serializer.save()
-

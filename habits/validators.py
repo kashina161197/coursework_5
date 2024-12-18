@@ -76,9 +76,12 @@ class DoingHabitLeastOnceWeek:
         self.field = field
 
     def __call__(self, value):
-        habit = dict(value).get(self.field)
-        if not habit:
+        periodicity = value.get(self.field)
+
+        if periodicity is None:
             return
 
-        if habit.periodicity not in ["every week"]:
-            raise ValidationError("Привычка должна выполняться не реже одного раза в неделю.")
+        if periodicity == "every week":
+            raise ValidationError(
+                "Привычка должна выполняться не реже одного раза в неделю."
+            )

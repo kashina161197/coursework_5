@@ -1,5 +1,7 @@
-from django.db import models
 import datetime
+
+from django.db import models
+
 from users.models import CustomsUser
 
 
@@ -7,6 +9,7 @@ class Habit(models.Model):
     """Модель привычки"""
 
     OWNER_CHOICES = [
+        ("every minutes", "каждую минуту"),
         ("every hour", "каждый час"),
         ("every day", "каждый день"),
         ("every other day", "через день"),
@@ -24,9 +27,24 @@ class Habit(models.Model):
         null=True,
         on_delete=models.SET_NULL,
     )
-    place = models.CharField(max_length=150, blank=True, null=True, verbose_name="Место выполнения привычки", help_text="Укажите место, в котором необходимо выполнять привычку")
-    time = models.DateTimeField(null=True, blank=True, verbose_name="Время выполнения привычки", help_text="Укажите время, когда необходимо выполнять привычку")
-    action = models.CharField(max_length=150, verbose_name="Действие привычки", help_text="Укажите действие, которое представляет собой привычка")
+    place = models.CharField(
+        max_length=150,
+        blank=True,
+        null=True,
+        verbose_name="Место выполнения привычки",
+        help_text="Укажите место, в котором необходимо выполнять привычку",
+    )
+    time = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name="Время выполнения привычки",
+        help_text="Укажите время, когда необходимо выполнять привычку",
+    )
+    action = models.CharField(
+        max_length=150,
+        verbose_name="Действие привычки",
+        help_text="Укажите действие, которое представляет собой привычка",
+    )
     sign_pleasant_habit = models.BooleanField(
         default=False,
         verbose_name="Признак приятной привычки",
@@ -70,6 +88,8 @@ class Habit(models.Model):
         return f"{self.action} by {self.owner.username} at {self.place}"
 
     def get_periodicity_timedelta(self):
+        if self.periodicity == "every minutes":
+            return datetime.timedelta(minutes=1)
         if self.periodicity == "every hour":
             return datetime.timedelta(hours=1)
         elif self.periodicity == "every day":
