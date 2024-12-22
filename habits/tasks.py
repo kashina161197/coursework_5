@@ -17,14 +17,14 @@ def check_habits():
     habits = Habit.objects.filter(owner__tg_chat_id__isnull=False)
 
     for habit in habits:
-        if habit.time <= now:
-            tg_chat_id = habit.owner.tg_chat_id
+        print(habit)
+        tg_chat_id = habit.owner.tg_chat_id
 
-            if habit.place:
-                message = f"Пришло время {habit.action} в {habit.place}"
-            else:
-                message = f"Пришло время {habit.action}"
-            send_telegram_message(tg_chat_id, message)
-            habit.time += habit.get_periodicity_timedelta()
-            print(habit.time)
-            habit.save()
+        if habit.place:
+            message = f"Пришло время {habit.action} в {habit.place}"
+        else:
+            message = f"Пришло время {habit.action}"
+        send_telegram_message(tg_chat_id, message)
+        habit.time += habit.get_periodicity_timedelta()
+        print(habit.time)
+        habit.save()

@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 
-TELEGRAM_URL = "https://api_telegram.org/bot"
+TELEGRAM_URL = "https://api.telegram.org/bot"
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 
 DEBUG = True if os.getenv("DEBUG") == "True" else False
@@ -176,8 +176,8 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 
 CELERY_BEAT_SCHEDULE = {
-    "checking_user_activity": {
-        "task": "courses.tasks.checking_user_activity",
+    "check_habits": {
+        "task": "habits.tasks.check_habits",
         "schedule": timedelta(minutes=1),
     },
 }
