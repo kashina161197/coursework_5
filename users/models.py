@@ -17,7 +17,7 @@ class CustomsUser(AbstractUser):
     phone_number = models.CharField(max_length=15, blank=True, null=True)
     country = models.CharField(max_length=100, blank=True, null=True)
     tg_chat_id = models.CharField(
-        verbose_name="ID чата в Telegram", blank=True, null=True
+        verbose_name="ID чата в Telegram", blank=True, null=True, max_length=300
     )
 
     USERNAME_FIELD = "email"
