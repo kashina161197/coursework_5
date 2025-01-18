@@ -80,7 +80,13 @@ jobs:
       - name: Deploy to Server
         run: |
           sshpass -f password.txt ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-            cd ${{ secrets.DEPLOY_DIR }}
-            docker compose down
-            docker compose up -d --build
+          apt install -y docker.io
+          docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+          
+          if [ "$(sudo docker ps -q -f name=myapp)" ]; then
+          sudo docker stop myapp
+          sudo docker rm myapp
+          fi
+          
+          docker run -d --name myapp -p 8080:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
           EOF
