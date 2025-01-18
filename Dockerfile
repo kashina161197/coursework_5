@@ -1,11 +1,18 @@
-FROM python:3.12 AS builder
-RUN curl -sSL https://install.python-poetry.org | python3 -
-WORKDIR /app
-ENV PATH="/root/.local/bin:${PATH}"
-ENV PYTHONPATH="/app"
-ENV POETRY_VIRTUALENVS_CREATE=false
-ENV POETRY_HTTP_TIMEOUT=120
+FROM python:3.12
 
-COPY pyproject.toml poetry.lock ./
-RUN poetry install --no-root
+WORKDIR /app
+
+RUN apt-get update \
+    && apt-get install -y gcc libpq-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
+
+RUN mkdir -p /app/staticfiles && chmod -R 755 /app/staticfiles
+
+EXPOSE 8000
+
+CMD ["sh", "-c", "python manage.py collectstatic --noinput && gunicorn config.wsgi.application --bind 0.0.0.0:8000"]
