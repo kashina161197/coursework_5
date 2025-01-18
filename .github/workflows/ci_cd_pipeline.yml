@@ -68,10 +68,14 @@ jobs:
               chmod 600 password.txt  # Установка прав доступа к файлу
           - name: Copy project files to server
             run: |
-                sshpass -f password.txt ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+              sshpass -f password.txt ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+                if [ ! -d "${{ secrets.DEPLOY_DIR }}/.git" ]; then
+                  git clone https://github.com/kashina161197/coursework_5.git ${{ secrets.DEPLOY_DIR }}
+                else
                   cd ${{ secrets.DEPLOY_DIR }}
                   git pull
-                EOF
+                fi
+              EOF
           - name: Reassembly
             run: |
                 sshpass -f password.txt ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
