@@ -68,13 +68,13 @@ jobs:
               chmod 600 password.txt  # Установка прав доступа к файлу
           - name: Copy project files to server
             run: |
-                sshpass -f password.tx ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+                sshpass -f password.txt ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
                   cd ${{ secrets.DEPLOY_DIR }}
                   git pull
                 EOF
           - name: Reassembly
             run: |
-                sshpass -f password.tx ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+                sshpass -f password.txt ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
                   cd ${{ secrets.DEPLOY_DIR }}
                   docker compose down
                   docker compose up -d --build
