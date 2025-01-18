@@ -84,7 +84,8 @@ jobs:
       - name: Deploy to Server
         run: |
           sshpass -f password.txt ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-          apt install -y docker.io
+          sleep 10
+          sudo apt install -y docker.io
           docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
           
           if [ "$(sudo docker ps -q -f name=myapp)" ]; then
