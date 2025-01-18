@@ -93,9 +93,9 @@ REST_FRAMEWORK = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'databasename',
-        'USER': 'databaseuser',
-        'PASSWORD': 'passworduser',
+        'NAME': 'coursedatabase',
+        'USER': 'course_user',
+        'PASSWORD': 'course_user_password',
         'HOST': 'localhost',
         'PORT': '5432',
     }
