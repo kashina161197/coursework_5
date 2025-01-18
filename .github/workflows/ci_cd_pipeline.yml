@@ -57,65 +57,65 @@ jobs:
       - name: Push Docker image in Docker Hub
         run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
 
-  deploy:
-      runs-on: ubuntu-latest
-      needs: build
-      steps:
-          - name: Set up SSH
-            run: |
-              sudo apt-get install -y sshpass  # Установка sshpass
-              echo "${{ secrets.SSH_PASSWORD }}" > password.txt  # Сохранение пароля во временный файл
-              chmod 600 password.txt  # Установка прав доступа к файлу
-          - name: Copy project files to server
-            run: |
-              sshpass -f password.txt ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-                if [ ! -d "${{ secrets.DEPLOY_DIR }}/.git" ]; then
-                  git clone https://github.com/kashina161197/coursework_5.git ${{ secrets.DEPLOY_DIR }}
-                else
-                  cd ${{ secrets.DEPLOY_DIR }}
-                  git pull
-                fi
-              EOF
-          - name: Reassembly
-            run: |
-                sshpass -f password.txt ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-                  cd ${{ secrets.DEPLOY_DIR }}
-                  docker compose down
-                  docker compose up -d --build
-                EOF
-
 #  deploy:
-#    needs: build
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - name: Set up SSH
-#        run: |
-#          sudo apt-get install -y sshpass  # Установка sshpass
-#          echo "${{ secrets.SSH_PASSWORD }}" > password.txt  # Сохранение пароля во временный файл
-#          chmod 600 password.txt  # Установка прав доступа к файлу
-#
-#      - name: Add SSH host key
-#        run: |
-#          mkdir -p ~/.ssh
-#          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
-#
-#      - name: Copy project files to server
-#        run: |
-#          sshpass -f password.txt rsync -avz --exclude '__pycache__' . ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.DEPLOY_DIR }}
-#
-#      - name: Deploy to Server
-#        run: |
-#          sshpass -f password.txt ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-#          sleep 10
-#          sudo apt-get update
-#          sudo apt-get install -y docker.io
-#          docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/my_app:${{ github.sha }}
-#
-#          if [ "$(sudo docker ps -q -f name=my_app)" ]; then
-#          sudo docker stop my_app
-#          sudo docker rm my_app
-#          fi
-#
-#          docker run -d --name my_app -p 8080:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/my_app:${{ github.sha }}
-#          EOF
+#      runs-on: ubuntu-latest
+#      needs: build
+#      steps:
+#          - name: Set up SSH
+#            run: |
+#              sudo apt-get install -y sshpass  # Установка sshpass
+#              echo "${{ secrets.SSH_PASSWORD }}" > password.txt  # Сохранение пароля во временный файл
+#              chmod 600 password.txt  # Установка прав доступа к файлу
+#          - name: Copy project files to server
+#            run: |
+#              sshpass -f password.txt ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+#                if [ ! -d "${{ secrets.DEPLOY_DIR }}/.git" ]; then
+#                  git clone https://github.com/kashina161197/coursework_5.git ${{ secrets.DEPLOY_DIR }}
+#                else
+#                  cd ${{ secrets.DEPLOY_DIR }}
+#                  git pull
+#                fi
+#              EOF
+#          - name: Reassembly
+#            run: |
+#                sshpass -f password.txt ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+#                  cd ${{ secrets.DEPLOY_DIR }}
+#                  docker compose down
+#                  docker compose up -d --build
+#                EOF
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up SSH
+        run: |
+          sudo apt-get install -y sshpass  # Установка sshpass
+          echo "${{ secrets.SSH_PASSWORD }}" > password.txt  # Сохранение пароля во временный файл
+          chmod 600 password.txt  # Установка прав доступа к файлу
+
+      - name: Add SSH host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+
+      - name: Copy project files to server
+        run: |
+          sshpass -f password.txt rsync -avz --exclude '__pycache__' . ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.DEPLOY_DIR }}
+
+      - name: Deploy to Server
+        run: |
+          sshpass -f password.txt ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+          sleep 10
+          sudo apt-get update
+          sudo apt-get install -y docker.io
+          docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/my_app:${{ github.sha }}
+
+          if [ "$(sudo docker ps -q -f name=my_app)" ]; then
+          sudo docker stop my_app
+          sudo docker rm my_app
+          fi
+
+          docker run -d --name my_app -p 8080:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/my_app:${{ github.sha }}
+          EOF
