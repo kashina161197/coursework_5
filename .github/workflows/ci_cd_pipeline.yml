@@ -77,10 +77,6 @@ jobs:
         run: |
           sshpass -f password.txt rsync -avz --exclude '__pycache__' . ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.DEPLOY_DIR }}
 
-      - name: Clean up
-        run: |
-          rm password.txt  # Удаление временного файла с паролем
-
       - name: Deploy to Server
         run: |
           sshpass -f password.txt ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
