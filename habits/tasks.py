@@ -1,9 +1,4 @@
-import datetime
-
-import pytz
 from celery import shared_task
-
-from config import settings
 from habits.models import Habit
 from habits.services import send_telegram_message
 
@@ -12,8 +7,6 @@ from habits.services import send_telegram_message
 def check_habits():
     """Задача отправки уведомления на выполнение привычки"""
 
-    zone = pytz.timezone(settings.TIME_ZONE)
-    now = datetime.datetime.now(zone)
     habits = Habit.objects.filter(owner__tg_chat_id__isnull=False)
 
     for habit in habits:

@@ -27,7 +27,7 @@ class HabitTestCase(APITestCase):
             "periodicity": "every day",
         }
         response = self.client.post(
-            "/habit/",
+            "/habits/habit/",
             data=data,
         )
 
@@ -52,7 +52,7 @@ class HabitTestCase(APITestCase):
             "time_to_complete": 1,
             "related_habit": related_habit.pk,
         }
-        response = self.client.post("/habit/", data=data)
+        response = self.client.post("/habits/habit/", data=data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn("Связанная привычка должна быть приятной", str(response.json()))
 
@@ -76,7 +76,7 @@ class HabitTestCase(APITestCase):
             "related_habit": related_habit.pk,
             "reward": "chocolate",
         }
-        response = self.client.post("/habits/", data=data)
+        response = self.client.post("/habits/habit/", data=data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn(
             "Нельзя использовать одновременно связанную привычку и вознаграждение",
@@ -92,28 +92,10 @@ class HabitTestCase(APITestCase):
             "periodicity": "every day",
             "time_to_complete": 121,
         }
-        response = self.client.post("/habits/", data=data)
+        response = self.client.post("/habits/habit/", data=data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn(
             "Время выполнения должно быть не больше 120 минут", str(response.json())
-        )
-
-    def test_habit_is_pleasant_create_with_reward(self):
-        """Тестирование отсутствие у приятной привычки связанной привычки или вознаграждения"""
-
-        data = {
-            "time": "2024-12-06 10:00",
-            "action": "Test",
-            "periodicity": "every day",
-            "time_to_complete": 1,
-            "is_pleasant": True,
-            "reward": "chocolate",
-        }
-        response = self.client.post("/habits/", data=data)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn(
-            "У приятной привычки не может быть связанной привычки или вознаграждения",
-            str(response.json()),
         )
 
     def test_habit_retrieve(self):

@@ -59,6 +59,7 @@ class IsPleasantNotRelatedHabitOrRewordValidator:
         self.field_3 = field_3
 
     def __call__(self, value):
+        print("Вызов валидатора")
         is_pleasant = dict(value).get(self.field_1)
         related_habit = dict(value).get(self.field_2)
         reward = dict(value).get(self.field_3)
