@@ -61,6 +61,9 @@ jobs:
       - name: Push Docker image in Docker Hub
         run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/my_app:${{ github.sha }}
 
+      - name: Проверка созданых образова
+        run: sudo docker images
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -85,7 +88,8 @@ jobs:
         run: |
           sshpass -f password.txt ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
           sleep 10
-          sudo apt install -y docker.io
+          sudo apt-get update
+          sudo apt-get install -y docker.io
           docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/my_app:${{ github.sha }}
           
           if [ "$(sudo docker ps -q -f name=my_app)" ]; then
