@@ -27,9 +27,9 @@ SECRET_KEY = "django-insecure-w36)6(_37%+k-g^sgcl(*^i&!8c=4*0!176q6asjemyulf1@y1
 TELEGRAM_URL = "https://api.telegram.org/bot"
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 
-DEBUG = True if os.getenv("DEBUG") == "True" else False
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -93,13 +93,14 @@ REST_FRAMEWORK = {
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "POSTGRES_DB": os.getenv("POSTGRES_DB"),
-        "POSTGRES_USER": os.getenv("POSTGRES_USER"),
-        "POSTGRES_PASSWORD": os.getenv("POSTGRES_PASSWORD"),
-        "POSTGRES_HOST": os.getenv("POSTGRES_HOST"),
-        "POSTGRES_PORT": os.getenv("POSTGRES_PORT"),
+        "NAME": os.getenv("POSTGRES_DB"),
+        "USER": os.getenv("POSTGRES_USER"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
+        "HOST": os.getenv("POSTGRES_HOST"),
+        "PORT": os.getenv("POSTGRES_PORT"),
     }
 }
+print(DATABASES["default"])
 
 
 AUTH_PASSWORD_VALIDATORS = [
