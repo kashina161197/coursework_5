@@ -81,12 +81,11 @@ jobs:
       - name: Deploy to Server
         run: |
           sshpass -f password.txt ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-          docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/my_app:latest
+          docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:latest
 
-          if [ "$(sudo docker ps -q -f name=my_app)" ]; then
-          sudo docker stop my_app
-          sudo docker rm my_app
-          fi
+          sudo docker stop myapp
+          sudo docker rm myapp
 
-          docker run -d --name my_app -p 8080:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/my_app:latest
+
+          docker run -d --name myapp -p 8080:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:latest
           EOF
