@@ -83,7 +83,7 @@ jobs:
           sshpass -f password.txt ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
           cd ~
           git clone https://github.com/kashina161197/coursework_5.git
-          cd coursework_5/
+          cd coursework_5
           docker system prune -af 
           docker volume prune -f 
           docker-compose up -d --build
