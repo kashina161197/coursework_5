@@ -84,5 +84,7 @@ jobs:
           cd ~
           git clone https://github.com/kashina161197/coursework_5.git
           cd coursework_5
+          docker system prune -af 
+          docker volume prune -f 
           docker-compose up -d --build
           EOF
